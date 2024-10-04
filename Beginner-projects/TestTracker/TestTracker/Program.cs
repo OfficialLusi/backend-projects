@@ -1,5 +1,4 @@
 ﻿using System.Text.Json;
-using TestTracker;
 
 namespace TestTracker;
 
@@ -7,7 +6,6 @@ class Program
 {
     static void Main(string[] args)
     {
-
         try
         {
             CreateJsonFile();
@@ -21,10 +19,20 @@ class Program
 
     public static void CreateJsonFile()
     {
-        var exampleTask = new TaskProp(1, "Example task", TaskProp.Status.todo, DateTime.Now, DateTime.Now);
+        string path = "E:/Users/lusaa1/OneDrive - Danieli/Documents/0-lusaa1/vs personal projects/backend-projects/Beginner-projects/TestTracker/TestTracker";
+
+        TaskProp exampleTask = new TaskProp(1, "Example task", TaskProp.Status.todo, DateTime.Now, DateTime.Now);
 
         string jsonString = JsonSerializer.Serialize(exampleTask);
-        File.WriteAllText("exampleTask.json", jsonString);
-    }
 
+        try
+        {
+            File.WriteAllText(Path.Combine(path,"exampleTask.json"), jsonString);
+        }
+        catch (IOException ioEx)
+        {
+            Console.WriteLine($"Errore di I/O durante la scrittura del file: {ioEx.Message}");
+            throw;
+        }
+    }
 }
