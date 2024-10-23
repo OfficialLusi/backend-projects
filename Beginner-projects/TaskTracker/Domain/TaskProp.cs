@@ -1,22 +1,13 @@
 ﻿namespace TaskTracker.Domain;
 
-public class TaskProp
+public class TaskProp(int id, string description)
 {
 
-    public int Id { get; set; }
-    public string Description { get; set; }
-    public string Status { get; set; }
-    public DateTime CreatedAt { get; set; }
-    public DateTime UpdatedAt { get; set; }
-
-    public TaskProp(int id, string description)
-    {
-        Id = id;
-        Description = description;
-        Status = "todo";
-        CreatedAt = DateTime.Now;
-        UpdatedAt = DateTime.Now;
-    }
+    public int Id { get; set; } = id;
+    public string Description { get; set; } = description;
+    public string Status { get; set; } = "todo";
+    public DateTime CreatedAt { get; set; } = DateTime.Now;
+    public DateTime UpdatedAt { get; set; } = DateTime.Now;
 
     public void UpdateStatus(string newStatus)
     {

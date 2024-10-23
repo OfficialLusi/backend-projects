@@ -33,9 +33,7 @@ public class TaskManager
             Console.WriteLine($"Task {id} updated succesfully.");
         }
         else
-        {
             Console.WriteLine($"Task with ID {id} not found.");
-        }
     }
 
     public void DeleteTask(int id)
@@ -48,9 +46,7 @@ public class TaskManager
             Console.WriteLine($"Task {id} deleted.");
         }
         else
-        {
             Console.WriteLine($"Task with ID {id} not found.");
-        }
     }
 
     public void MarkTask(int id, string status)
@@ -63,9 +59,7 @@ public class TaskManager
             Console.WriteLine($"Task {id} updated at '{status}'.");
         }
         else
-        {
             Console.WriteLine($"Task with ID  {id}  not found.");
-        }
     }
 
     public void ListTasks(string? status = null)
@@ -73,13 +67,11 @@ public class TaskManager
         IEnumerable<TaskProp> tasksToDisplay = _tasks;
 
         if (!string.IsNullOrEmpty(status))
-        {
             tasksToDisplay = tasksToDisplay.Where(t => t.Status == status);
-        }
 
         foreach (var task in tasksToDisplay)
-        {
-            Console.WriteLine($"{task.Id}. {task.Description} - {task.Status} (Created: {task.CreatedAt}, Updated: {task.UpdatedAt})");
-        }
+        Console.WriteLine($"{task.Id}. {task.Description} - {task.Status} (Created: {task.CreatedAt}, Updated: {task.UpdatedAt})");
     }
+
+    public TaskProp GetTask(int id) => _tasks.FirstOrDefault(t => t.Id == id);
 }

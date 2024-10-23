@@ -3,7 +3,7 @@ using TaskTracker.Domain;
 
 namespace TaskTracker.Infrastructure;
 
-public class TaskRepository
+public class TaskRepository : ITaskRepository
 {
     private readonly string _filePath;
 
@@ -12,7 +12,7 @@ public class TaskRepository
         _filePath = filePath;
 
         if (!File.Exists(_filePath))
-            CreateEmptyJsonFile();
+            CreateEmptyJsonFile(_filePath);
     }
 
     public List<TaskProp> LoadTasks()
@@ -27,8 +27,8 @@ public class TaskRepository
         File.WriteAllText(_filePath, json);
     }
 
-    private void CreateEmptyJsonFile()
+    private static void CreateEmptyJsonFile(string filePath)
     {
-        File.WriteAllText(_filePath, "[]");
+        File.WriteAllText(filePath, "[]");
     }
 }

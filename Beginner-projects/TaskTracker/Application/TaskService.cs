@@ -2,7 +2,7 @@
 
 namespace TaskTracker.Application;
 
-class TaskService(TaskManager taskManager)
+class TaskService(TaskManager taskManager) : ITaskService
 {
     private readonly TaskManager _taskManager = taskManager;
 
@@ -37,10 +37,32 @@ class TaskService(TaskManager taskManager)
             Console.WriteLine("Invalid format. Use: delete <id>");
     }
 
+    public void MarkTodo(string[] commandArgs)
+    {
+        if (commandArgs.Length > 1 && int.TryParse(commandArgs[1], out int toDoId))
+        {
+            if (_taskManager.GetTask(toDoId).Status != "todo")
+            {
+                _taskManager.MarkTask(toDoId, "todo");
+                return;
+            }
+            Console.WriteLine("Task already todo.");
+        }
+        else
+            Console.WriteLine("Invalid format. Use: mark-todo <id>");
+    }
+
     public void MarkInProgress(string[] commandArgs)
     {
         if (commandArgs.Length > 1 && int.TryParse(commandArgs[1], out int inProgressId))
-            _taskManager.MarkTask(inProgressId, "in-progress");
+        {
+            if(_taskManager.GetTask(inProgressId).Status != "in-progress")
+            {
+                _taskManager.MarkTask(inProgressId, "in-progress");
+                return;
+            }
+            Console.WriteLine("Task already in progress.");
+        }
         else
             Console.WriteLine("Invalid format. Use: mark-in-progress <id>");
     }
@@ -48,29 +70,24 @@ class TaskService(TaskManager taskManager)
     public void MarkDone(string[] commandArgs)
     {
         if (commandArgs.Length > 1 && int.TryParse(commandArgs[1], out int doneId))
-            _taskManager.MarkTask(doneId, "done");
+        {
+            if(_taskManager.GetTask(doneId).Status != "done")
+            {
+                _taskManager.MarkTask(doneId, "done");
+                return;
+            }
+            Console.WriteLine("Task already done.");
+
+        }
         else
             Console.WriteLine("Invalid format. Use: mark-done <id>");
     }
 
-    public void ListAll()
-    {
-        _taskManager.ListTasks();
-    }
+    public void ListAll() => _taskManager.ListTasks();
 
-    public void ListToDo()
-    {
-        _taskManager.ListTasks("todo");
-    }
+    public void ListToDo() => _taskManager.ListTasks("todo");
 
-    public void ListInProgress()
-    {
-        _taskManager.ListTasks("in-progress");
-    }
+    public void ListInProgress() => _taskManager.ListTasks("in-progress");
 
-    public void ListDone()
-    {
-        _taskManager.ListTasks("done");
-    }
-
+    public void ListDone() => _taskManager.ListTasks("done");  
 }

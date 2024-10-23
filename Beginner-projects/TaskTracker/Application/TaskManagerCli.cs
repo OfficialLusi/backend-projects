@@ -24,6 +24,7 @@ public class TaskManagerCli
                           "   - add <activity>,         " +
                           "   - update <id> <activity>, " +
                           "   - delete <id>,            " +
+                          "   - mark-todo <id>,         " +
                           "   - mark-in-progress <id>,  " +
                           "   - mark-done <id>,         " +
                           "   - list-all,               " +
@@ -59,6 +60,10 @@ public class TaskManagerCli
 
                 case "delete":
                     _taskService.Delete(commandArgs);
+                    break;
+                
+                case "mark-todo":
+                    _taskService.MarkTodo(commandArgs);
                     break;
 
                 case "mark-in-progress":
