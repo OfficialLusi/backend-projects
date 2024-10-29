@@ -19,19 +19,8 @@ public class TaskManagerCli
     public void TaskManagerCliMain()
     {
 
-        Console.WriteLine("Welcome to Task Manager CLI!");
-        Console.WriteLine("you can use commands like:   " +
-                          "   - add <activity>,         " +
-                          "   - update <id> <activity>, " +
-                          "   - delete <id>,            " +
-                          "   - mark-todo <id>,         " +
-                          "   - mark-in-progress <id>,  " +
-                          "   - mark-done <id>,         " +
-                          "   - list-all,               " +
-                          "   - list-todo,              " +
-                          "   - list-in-progress,       " +
-                          "   - list-done,              " +
-                          "   - exit                    ");
+        Console.WriteLine("Welcome to Task Manager CLI!   ");
+        Help();
 
         while (true)
         {
@@ -94,11 +83,32 @@ public class TaskManagerCli
                     Console.WriteLine("Exit program.");
                     return;
 
+                case "help":
+                    Help();
+                    break;
+
                 default:
                     Console.WriteLine("Unknow command.");
                     break;
             }
         }
+    }
+
+    private void Help()
+    {
+        Console.WriteLine("you can use commands like:   \n" +
+                          "   - add <activity>,         \n" +
+                          "   - update <id> <activity>, \n" +
+                          "   - delete <id>,            \n" +
+                          "   - mark-todo <id>,         \n" +
+                          "   - mark-in-progress <id>,  \n" +
+                          "   - mark-done <id>,         \n" +
+                          "   - list-all,               \n" +
+                          "   - list-todo,              \n" +
+                          "   - list-in-progress,       \n" +
+                          "   - list-done,              \n" +
+                          "   - exit                    \n" +
+                          "   - help                      ");
     }
 
 }
