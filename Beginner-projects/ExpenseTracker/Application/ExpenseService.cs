@@ -1,64 +1,58 @@
 ﻿using ExpenseTracker.Domain;
-using System.Drawing;
 using System.Globalization;
 
 namespace ExpenseTracker.Application;
 
-public class ExpenseService : IExpenseService
+public class ExpenseService(ExpenseManager manager) : IExpenseService
 {
-    private readonly ExpenseManager _manager;
-
-    public ExpenseService(ExpenseManager manager)
-    {
-        _manager = manager;
-    }
+    private readonly ExpenseManager _manager = manager;
 
     /*
      * The input should be something like:
-     * add --description "description" --amount "amount
+     * add --description "description" --amount amount --category "category"
      */
-    public void Add(string[] commandArgs)
+    public void Add(string description, int amount, string category)
     {
-        if (commandArgs.Length > 3)
+        try
         {
-            string description = commandArgs[2];
-            int amount = Convert.ToInt32(commandArgs[4]);
-            _manager.AddExpense(description, amount);
+            _manager.AddExpense(description, amount, category);
         }
-        else
-            Console.WriteLine("You need a description and an amount to add an expense");
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An unexpected error occurred: {ex.Message}");
+        }
     }
 
     /*
      * The input should be something like:
      * update --id 3 --newdescription "description" --newamount "amount"
-     */ 
-    public void Update(string[] commandArgs)
+     */
+    public void Update(int id, string description, int amount, string category)
     {
-        if (commandArgs.Length > 5)
+        try
         {
-            int updateId = Convert.ToInt32(commandArgs[2]);
-            string newDescription = commandArgs[4];
-            int newAmount = Convert.ToInt32(commandArgs[6]);
-            _manager.UpdateExpense(updateId, newDescription, newAmount);
+            _manager.UpdateExpense(id, description, amount, category);
         }
-        else
-            Console.WriteLine("You need an Id, a new description and a new amount to update an expense");
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An unexpected error occurred: {ex.Message}");
+        }
     }
 
-     /*
-     * The input should be something like:
-     * delete --id 3 
-     */
-    public void Delete(string[] commandArgs)
+    /*
+    * The input should be something like:
+    * delete --id 3 
+    */
+    public void Delete(int id)
     {
-        if (commandArgs.Length > 1)
+        try
         {
-            int deleteId = Convert.ToInt32(commandArgs[2]);
-            _manager.DeleteExpense(deleteId);
+            _manager.DeleteExpense(id);
         }
-        else
-            Console.WriteLine("You need an Id to delete an expense");
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An unexpected error occurred: {ex.Message}");
+        }
     }
 
     /*
@@ -67,28 +61,43 @@ public class ExpenseService : IExpenseService
     */
     public void ListAllExpenses()
     {
-        _manager.ListAllExpenses();
+        try
+        {
+            _manager.ListAllExpenses();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An unexpected error occurred: {ex.Message}");
+        }
     }
+
+    public void ListExpensesPerCategory(string category)
+    {
+        try
+        {
+            _manager.SelectExpensePerCategory(category);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An unexpected error occurred: {ex.Message}");
+        }
+    }
+
 
     /*
     * The input should be something like:
     * view-expenses-per-month --month "month-name" or "2"
     */
-    public void ListExpensesPerMonth(string[] commandArgs)
+    public void ListExpensesPerMonth(int month)
     {
-        DateTimeFormatInfo dtfi = CultureInfo.CurrentCulture.DateTimeFormat;
-        int month = 0;
-        try 
+        DateTimeFormatInfo dtfi = CultureInfo.InvariantCulture.DateTimeFormat;
+        try
         {
-            month = Convert.ToInt32(commandArgs[2]);
             _manager.ListExpensesPerMonth(month);
-
         }
-        catch
+        catch (Exception ex)
         {
-            month = Array.FindIndex(dtfi.MonthNames, m => m.Equals(commandArgs[2], StringComparison.CurrentCultureIgnoreCase)) + 1;
-
-            _manager.ListExpensesPerMonth(month);
+            Console.WriteLine($"An unexpected error occurred: {ex.Message}");
         }
     }
 
@@ -98,6 +107,61 @@ public class ExpenseService : IExpenseService
     */
     public void ViewMoneySpent()
     {
-        _manager.ViewAllMoneySpent();
+        try
+        {
+            _manager.ViewAllMoneySpent();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An unexpected error occurred: {ex.Message}");
+        }
+    }
+
+    public void DeleteAll()
+    {
+        try
+        {
+            _manager.DeleteAll();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An unexpected error occurred: {ex.Message}");
+        }
+    }
+
+    public void SetBudgetForMonth(int month, int budget)
+    {
+        try
+        {
+            _manager.SetBudgetForMonth(month, budget);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An unexpected error occurred: {ex.Message}");
+        }
+    }
+
+    public void IsMonthCritical(int month)
+    {
+        try
+        {
+            _manager.IsMonthCritical(month);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An unexpected error occurred: {ex.Message}");
+        }
+    }
+
+    public void CreateCsv()
+    {
+        try
+        {
+            _manager.CreateCsv();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An unexpected error occurred: {ex.Message}");
+        }
     }
 }

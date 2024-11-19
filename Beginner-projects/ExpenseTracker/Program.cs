@@ -4,9 +4,9 @@ namespace ExpenseTracker;
 
 public class Program
 {
-    static void Main(string[] args)
+    public static void Main(string[] args)
     {
-        ExpenseManagerCli cli = new ExpenseManagerCli();
-        cli.ExpenseManagerCliMain();
+        ExpensesManagerCli cli = new ExpensesManagerCli();
+        cli.ManagerCliMain();
     }
 }
