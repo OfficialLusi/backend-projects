@@ -1,8 +1,10 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Select the physical quantity to be converted";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<h2>Select the type of conversion</h2>
+<ul>
+    <li><a asp-controller="Home" asp-action="Length">Convert Length</a></li>
+    <li><a asp-controller="Home" asp-action="Weight">Convert Weight</a></li>
+    <li><a asp-controller="Home" asp-action="Temperature">Convert Temperature</a></li>
+</ul>
