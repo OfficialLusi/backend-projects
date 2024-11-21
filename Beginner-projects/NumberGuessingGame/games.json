@@ -1,0 +1,12 @@
+[
+  {
+    "Id": 1,
+    "Mode": 0,
+    "Lives": 4,
+    "Attempts": 0,
+    "Result": true,
+    "StartDate": "2024-11-21T17:06:29.6005502+01:00",
+    "EndDate": "0001-01-01T00:00:00",
+    "GameDuration": "00:00:00"
+  }
+]
