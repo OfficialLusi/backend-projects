@@ -25,18 +25,16 @@ public class CliService
     {
         var rootCommand = BuildRootCommand();
 
+        Console.WriteLine("\nWelcome to the Number Guessing Game!");
+        
         while (true)
         {
-            Console.WriteLine("\nWelcome to the Number Guessing Game!");
             Console.WriteLine("Type '--help' to see available commands or 'exit' to quit.\n");
+            Console.WriteLine("Insert a command");
 
             Console.Write("> ");
             var userInput = Console.ReadLine();
             string[] userArgs = userInput.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-
-
-
-
 
             if (userArgs[0].ToLower() == "exit")
             {
@@ -60,16 +58,16 @@ public class CliService
 
         // define "show-all" command
         var showAllGamesWonCommand = new Command("show-all-won", "Show all games won");
-        showAllGamesCommand.SetHandler(_service.ShowAllGamesWon);
+        showAllGamesWonCommand.SetHandler(_service.ShowAllGamesWon);
 
         // define "show-all" command
         var showAllGamesLostCommand = new Command("show-all-lost", "Show all games lost");
-        showAllGamesCommand.SetHandler(_service.ShowAllGamesLost);
+        showAllGamesLostCommand.SetHandler(_service.ShowAllGamesLost);
 
         // define "show-all" command
         Option<int> gameById = new Option<int>("--id", "id for showing a game") { IsRequired = true };
         var showGameByIdCommand = new Command("show-game-id", "Show game by id");
-        showAllGamesCommand.SetHandler(_service.ShowGameById, gameById);
+        showGameByIdCommand.SetHandler(_service.ShowGameById, gameById);
 
         // define "delete-all"
         var deleteAllCommand = new Command("delete-all", "Delete all games memory");
@@ -77,7 +75,6 @@ public class CliService
         
         // define "exit" command
         var exitCommand = new Command("exit", "Exit application");
-        showAllGamesCommand.SetHandler(_service.ShowAllGamesLost);
 
         var rootCommand = new RootCommand
             {
@@ -85,6 +82,7 @@ public class CliService
                 showAllGamesCommand,
                 showAllGamesWonCommand,
                 showAllGamesLostCommand,
+                deleteAllCommand,
                 showGameByIdCommand
             };
 

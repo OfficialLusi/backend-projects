@@ -21,7 +21,7 @@ public class GameManager
     {
         Game game = new Game()
         {
-            Id = _games.Count() > 0 ? _games.Max(x => x.Id) : 1,
+            Id = _games.Count() > 0 ? _games.Max(x => x.Id) + 1: 1,
             StartDate = DateTime.Now
         };
         ManageGameMode(game);
@@ -32,16 +32,28 @@ public class GameManager
     {
         switch (game.Mode)
         {
-            case Game.GameMode.Easy: game.Attempts = game.Attempts != 0 ? easy - 1 - game.Lives : 0; break;
-            case Game.GameMode.Medium: game.Attempts = game.Attempts != 0 ? medium - 1 - game.Lives : 0; break;
-            case Game.GameMode.Hard: game.Attempts = game.Attempts != 0 ? hard - 1 - game.Lives : 0; break;
+            case Game.GameMode.Easy: game.Attempts = game.Lives != 0 ? easy - game.Lives : easy; break;
+            case Game.GameMode.Medium: game.Attempts = game.Lives != 0 ? medium - game.Lives : medium; break;
+            case Game.GameMode.Hard: game.Attempts = game.Lives != 0 ? hard - game.Lives : hard; break;
         }
+        game.EndDate = DateTime.Now;
+        game.GameDuration = game.EndDate - game.StartDate;
+        if(game.Attempts < _games.Min(x => x.Attempts))
+            Console.WriteLine($"You set a new attempts record: {game.Attempts} for {game.Mode} mode");
+        if (game.GameDuration < _games.Min(x => x.GameDuration))
+            Console.WriteLine($"You set a new time record: {game.GameDuration} for {game.Mode} mode");
         _games.Add(game);
         _gamesRepo.SaveGames(_games);
     }
 
     public void ShowAllGames()
     {
+        if(_games.Count == 0)
+        {
+            Console.WriteLine("There's no games played.");
+            return;
+        }
+
         foreach (var game in _games)
         {
             if (game.Result)
@@ -49,23 +61,31 @@ public class GameManager
                                   $"Game Mode: {game.Mode}\n" +
                                   $"Attempts: {game.Attempts}\n" +
                                   $"Result: you won\n" +
-                                  $"Game Started on: {game.StartDate.Date} at {game.StartDate.TimeOfDay}\n" +
-                                  $"Game Ended on: {game.EndDate.Date} at {game.EndDate.TimeOfDay}\n" +
-                                  $"Game Duration: {game.GameDuration}");
+                                  $"Game Started on: {game.StartDate}\n" +
+                                  $"Game Ended on: {game.EndDate}\n" +
+                                  $"Game Duration: {game.GameDuration}\n");
             else
                 Console.WriteLine($"Game Id: {game.Id}\n" +
                                   $"Game Mode: {game.Mode}\n" +
                                   $"Attempts: {game.Attempts}\n" +
                                   $"Result: you lost\n" +
-                                  $"Game Started on: {game.StartDate.Date} at {game.StartDate.TimeOfDay}\n" +
-                                  $"Game Ended on: {game.EndDate.Date} at {game.EndDate.TimeOfDay}\n" +
-                                  $"Game Duration: {game.GameDuration}");
+                                  $"Game Started on: {game.StartDate}\n" +
+                                  $"Game Ended on: {game.EndDate}\n" +
+                                  $"Game Duration: {game.GameDuration}\n");
         }
     }
 
     public void ShowAllGamesWon()
     {
-        foreach (var game in _games.Where(x => x.Result == true))
+        List<Game> gamesWon = _games.Where(game => game.Result == true).ToList();
+
+        if (gamesWon.Count == 0)
+        {
+            Console.WriteLine("There's no games won.");
+            return;
+        }
+
+        foreach (var game in gamesWon)
             Console.WriteLine($"Game Id: {game.Id}\n" +
                               $"Game Mode: {game.Mode}\n" +
                               $"Attempts: {game.Attempts}\n" +
@@ -76,7 +96,15 @@ public class GameManager
 
     public void ShowAllGamesLost()
     {
-        foreach (var game in _games.Where(x => x.Result == false))
+        List<Game> gamesLost = _games.Where(game => game.Result == false).ToList();
+
+        if (gamesLost.Count == 0)
+        {
+            Console.WriteLine("There's no games lost.");
+            return;
+        }
+
+        foreach (var game in gamesLost)
             Console.WriteLine($"Game Id: {game.Id}\n" +
                               $"Game Mode: {game.Mode}\n" +
                               $"Attempts: {game.Attempts}\n" +
@@ -86,31 +114,40 @@ public class GameManager
     }
     public void ShowGameById(int id)
     {
-        foreach (var game in _games.Where(x => x.Id == id))
+        Game? game = null;
+
+        if(_games.Any(game => game.Id == id))
+            game = _games.FirstOrDefault(x => x.Id == id);
+
+        if (game == null) 
         {
-            if (game.Result)
-                Console.WriteLine($"Game Id: {game.Id}\n" +
-                                  $"Game Mode: {game.Mode}\n" +
-                                  $"Attempts: {game.Attempts}\n" +
-                                  $"Result: you won\n" +
-                                  $"Game Started on: {game.StartDate.Date} at {game.StartDate.TimeOfDay}\n" +
-                                  $"Game Ended on: {game.EndDate.Date} at {game.EndDate.TimeOfDay}\n" +
-                                  $"Game Duration: {game.GameDuration}");
-            else
-                Console.WriteLine($"Game Id: {game.Id}\n" +
-                                  $"Game Mode: {game.Mode}\n" +
-                                  $"Attempts: {game.Attempts}\n" +
-                                  $"Result: you lost\n" +
-                                  $"Game Started on: {game.StartDate.Date} at {game.StartDate.TimeOfDay}\n" +
-                                  $"Game Ended on: {game.EndDate.Date} at {game.EndDate.TimeOfDay}\n" +
-                                  $"Game Duration: {game.GameDuration}");
+            Console.WriteLine($"No game found with id: {id}");
+            return;
         }
+
+        if (game.Result)
+            Console.WriteLine($"Game Id: {game.Id}\n" +
+                              $"Game Mode: {game.Mode}\n" +
+                              $"Attempts: {game.Attempts}\n" +
+                              $"Result: you won\n" +
+                              $"Game Started on: {game.StartDate.Date} at {game.StartDate.TimeOfDay}\n" +
+                              $"Game Ended on: {game.EndDate.Date} at {game.EndDate.TimeOfDay}\n" +
+                              $"Game Duration: {game.GameDuration}");
+        else
+            Console.WriteLine($"Game Id: {game.Id}\n" +
+                              $"Game Mode: {game.Mode}\n" +
+                              $"Attempts: {game.Attempts}\n" +
+                              $"Result: you lost\n" +
+                              $"Game Started on: {game.StartDate.Date} at {game.StartDate.TimeOfDay}\n" +
+                              $"Game Ended on: {game.EndDate.Date} at {game.EndDate.TimeOfDay}\n" +
+                              $"Game Duration: {game.GameDuration}");
     }
 
     public void DeleteAll()
     {
         _games.Clear();
         _gamesRepo.DeleteGames(_games);
+        Console.WriteLine("Games deleted correctly.");
     }
 
     private static void ManageGameMode(Game game)
