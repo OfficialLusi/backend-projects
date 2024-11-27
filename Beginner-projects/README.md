@@ -5,3 +5,4 @@ Github user activity url: https://roadmap.sh/projects/github-user-activity
 Expense tracker url: https://roadmap.sh/projects/expense-tracker
 Unit converter url: https://roadmap.sh/projects/unit-converter
 Number guessing game url: https://roadmap.sh/projects/number-guessing-game
+Personal blog url: https://roadmap.sh/projects/personal-blog
